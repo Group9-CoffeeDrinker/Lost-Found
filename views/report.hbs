@@ -2,3 +2,71 @@
   <h2>Report Page</h2>
   <p>Hello world from the report page.</p>
 </section>
+
+<section>
+  <h2>Report Lost Item</h2>
+  <form action="/report" method="POST" enctype="multipart/form-data">
+    <label for="itemName">Item Name:</label>
+    <input type="text" id="itemName" name="itemName" required>
+    
+    <br>
+
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" required></textarea>
+    <br>
+    <label for="locationLost">Location Lost:</label>
+    <input type="text" id="locationLost" name="locationLost" required>
+
+    <br>
+
+    <label for="date">Date:</label>
+    <input type="date" id="date" name="date" required>
+  <br>
+    <label for="contactEmail">Contact Email:</label>
+    <input type="email" id="contactEmail" name="contactEmail" required>
+  <br>
+    <label for="itemImage">Item Image:</label>
+    <input type="file" id="itemImage" name="itemImage" accept="image/*" required>
+
+    <button type="submit">Submit</button>
+  </form>
+</section>
+
+<script>
+  const reportForm = document.querySelector('form[action="/report"]');
+  const reportResult = document.createElement('div');
+  reportResult.id = 'report-result';
+  reportResult.classList.add('hidden', 'border', 'p-4', 'mt-4');
+  reportForm.insertAdjacentElement('afterend', reportResult);
+
+  if (reportForm) {
+    reportForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      reportResult.classList.remove('hidden', 'border-emerald-200', 'border-red-200', 'bg-emerald-50', 'bg-red-50');
+      reportResult.classList.add('border-gray-200', 'bg-gray-50');
+      reportResult.textContent = 'Submitting report...';
+
+      const formData = new FormData(reportForm);
+
+      try {
+        const response = await fetch('/report', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Submission failed.');
+        }
+
+        reportResult.classList.remove('border-gray-200', 'bg-gray-50');
+        reportResult.classList.add('border-emerald-200', 'bg-emerald-50');
+        reportResult.textContent = 'Report submitted successfully!';
+      } catch (error) {
+        reportResult.classList.remove('border-gray-200', 'bg-gray-50');
+        reportResult.classList.add('border-red-200', 'bg-red-50');
+        reportResult.textContent = error.message || 'Something went wrong.';
+      }
+    });
+  }
+</script>
