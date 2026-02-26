@@ -1,7 +1,42 @@
 <section>
   <h2>Item Detail</h2>
-  <p>Hello world from the item detail page.</p>
-  {{#if itemId}}
-    <p>Item ID: {{itemId}}</p>
-  {{/if}}
+
+  {{#if notFound}}
+    <p>Item not found.</p>
+  {{else}}
+    {{#if item}}
+      <article>
+        <p><strong>Name:</strong> {{item.name}}</p>
+        <p><strong>Description:</strong> {{item.description}}</p>
+        <p><strong>Location:</strong> {{item.location}}</p>
+        <p><strong>Date:</strong> {{item.date}}</p>
+        <p><strong>Contact:</strong> {{item.contact}}</p>
+        <p><strong>Status:</strong> {{item.status}}</p>
+
+        {{#if item.imagePath}}
+          <p><strong>Image:</strong></p>
+          <img src="{{item.imagePath}}" alt="{{item.name}}" style="max-width: 300px; height: auto;">
+        {{/if}}
+      </article>
+
+      <hr>
+
+      <h3>Update Status</h3>
+      <form action="/items/{{item.id}}/status" method="post">
+        <label for="status">Status</label>
+        <select id="status" name="status">
+          <option value="Lost" {{#if (eq item.status "Lost")}}selected{{/if}}>Lost</option>
+          <option value="Found" {{#if (eq item.status "Found")}}selected{{/if}}>Found</option>
+          <option value="Closed" {{#if (eq item.status "Closed")}}selected{{/if}}>Closed</option>
+        </select>
+        <button type="submit">Save</button>
+      </form>
+    {{else}}
+      <p>No item data available.</p>
+    {{/if}}
+  {{/else}}
+
+  <p>
+    <a href="/dashboard">Back to dashboard</a>
+  </p>
 </section>
