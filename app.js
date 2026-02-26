@@ -1,8 +1,24 @@
 const express = require('express');
 const { engine } = require('express-handlebars');
 const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
 
 const app = express();
+
+const uploadDir = path.join(__dirname, 'public', 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, uploadDir),
+  filename: (req, file, cb) => {
+    const ext = (path.extname(file.originalname) || '.jpg').toLowerCase();
+    cb(null, `${Date.now()}-${Buffer.from(file.originalname, 'latin1').toString('utf8').replace(/\s+/g, '-')}${ext}`);
+  },
+});
+const upload = multer({ storage });
 app.disable('x-powered-by'); //hiding the information of the api respond header 
 
 const MockData = [
@@ -59,7 +75,22 @@ app.get('/report', (req, res) => {
   res.render('report', { pageTitle: 'Report Item' });
 });
 
-
+app.post('/report', upload.single('image'), (req, res) => {
+  const { name, description, location, date, contact, status } = req.body;
+  const imagePath = req.file ? `/uploads/${req.file.filename}` : '';
+  const item = {
+    id: String(Date.now()),
+    name: name || '',
+    description: description || '',
+    location: location || '',
+    date: date || '',
+    contact: contact || '',
+    imagePath: imagePath,
+    status: status || 'Lost',
+  };
+  MockData.push(item);
+  res.redirect('/dashboard');
+});
 
 app.get('/dashboard', (req, res) => {
   res.render('dashboard', {

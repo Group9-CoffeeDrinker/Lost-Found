@@ -1,4 +1,40 @@
 <section>
-  <h2>Report Page</h2>
-  <p>Hello world from the report page.</p>
+  <h2>Report Item</h2>
+  <form action="/report" method="post" enctype="multipart/form-data">
+    <p>
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" required placeholder="e.g. Blue Wallet">
+    </p>
+    <p>
+      <label for="description">Description</label>
+      <textarea id="description" name="description" rows="3" placeholder="e.g. Leather wallet with student ID"></textarea>
+    </p>
+    <p>
+      <label for="location">Location</label>
+      <input type="text" id="location" name="location" required placeholder="e.g. Library Hall B">
+    </p>
+    <p>
+      <label for="date">Date</label>
+      <input type="date" id="date" name="date" required>
+    </p>
+    <p>
+      <label for="contact">Contact</label>
+      <input type="email" id="contact" name="contact" required placeholder="e.g. student@univ.edu">
+    </p>
+    <p>
+      <label for="image">Image</label>
+      <input type="file" id="image" name="image" accept="image/*">
+    </p>
+    <p>
+      <label for="status">Status</label>
+      <select id="status" name="status">
+        <option value="Lost" selected>Lost</option>
+        <option value="Found">Found</option>
+      </select>
+    </p>
+    <p>
+      <button type="submit">Submit Report</button>
+      <a href="/dashboard">Cancel</a>
+    </p>
+  </form>
 </section>
