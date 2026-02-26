@@ -27,6 +27,9 @@ app.engine('.hbs', engine({
       if (!this._sections) this._sections = {};
       this._sections[name] = options.fn(this);
       return null;
+    },
+    eq: function (a, b) {
+      return a === b;
     }
   }
 }));
@@ -127,10 +130,37 @@ app.get('/dashboard', (req, res) => {
 });
 
 app.get('/items/:id', (req, res) => {
+  const item = MockData.find((entry) => entry.id === req.params.id);
+
+  if (!item) {
+    return res.status(404).render('detail', {
+      pageTitle: 'Item Detail',
+      notFound: true,
+    });
+  }
+
   res.render('detail', {
     pageTitle: 'Item Detail',
-    itemId: req.params.id,
+    item,
   });
+});
+
+app.post('/items/:id/status', (req, res) => {
+  const item = MockData.find((entry) => entry.id === req.params.id);
+
+  if (!item) {
+    return res.status(404).send('Item not found');
+  }
+
+  const { status } = req.body;
+  const allowedStatuses = ['Lost', 'Found', 'Closed'];
+
+  if (!allowedStatuses.includes(status)) {
+    return res.status(400).send('Invalid status value');
+  }
+
+  item.status = status;
+  res.redirect(`/items/${item.id}`);
 });
 
 const PORT = 3000;
