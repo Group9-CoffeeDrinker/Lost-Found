@@ -1,4 +1,34 @@
 <section>
   <h2>Dashboard</h2>
-  <p>Hello world from the dashboard page.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Location</th>
+        <th>Date</th>
+        <th>Contact</th>
+        <th>Status</th>
+        <th>Detail</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each items}}
+        <tr>
+          <td>{{id}}</td>
+          <td>{{name}}</td>
+          <td>{{description}}</td>
+          <td>{{location}}</td>
+          <td>{{date}}</td>
+          <td>{{contact}}</td>
+          <td>{{status}}</td>
+          <td>
+            <a href="/items/{{id}}">View</a>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
 </section>

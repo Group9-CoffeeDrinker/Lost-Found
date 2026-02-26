@@ -4,6 +4,29 @@ const path = require('path');
 
 const app = express();
 
+const MockData = [
+  {
+    id: 'unique_string', // Use Date.now() or a UUID
+    name: 'Blue Wallet',
+    description: 'Leather wallet with student ID',
+    location: 'Library Hall B',
+    date: '2023-10-25',
+    contact: 'student@univ.edu',
+    imagePath: '/uploads/filename.jpg',
+    status: 'Lost', // Default: Lost. Others: Found, Closed.
+  },
+  {
+    id: 'unique_string_2', // Use Date.now() or a UUID
+    name: 'Black Umbrella',
+    description: 'Foldable umbrella left in cafeteria',
+    location: 'Cafeteria',
+    date: '2023-10-26',
+    contact: 'owner@univ.edu',
+    imagePath: '/uploads/umbrella.jpg',
+    status: 'Found', // Default: Lost. Others: Found, Closed.
+  },
+];
+
 // Handlebars configuration with helpers defined inline
 app.engine('.hbs', engine({
   extname: '.hbs',
@@ -35,8 +58,13 @@ app.get('/report', (req, res) => {
   res.render('report', { pageTitle: 'Report Item' });
 });
 
+
+
 app.get('/dashboard', (req, res) => {
-  res.render('dashboard', { pageTitle: 'Dashboard' });
+  res.render('dashboard', {
+    pageTitle: 'Dashboard',
+    items: MockData,
+  });
 });
 
 app.get('/items/:id', (req, res) => {
